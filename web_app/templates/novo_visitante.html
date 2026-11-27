@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Novo Visitante</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <style>
+        .form-container {
+            max-width: 500px;
+            margin: 20px auto;
+            background: white;
+            padding: 30px;
+            border-radius: var(--radius);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        }
+        input {
+            width: 100%;
+            padding: 12px;
+            margin: 8px 0 20px 0;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            box-sizing: border-box; /* Garante padding correto */
+        }
+        input:focus {
+            outline: 2px solid var(--accent);
+        }
+        button {
+            width: 100%;
+            background: var(--primary);
+            color: white;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <nav class="sidebar">
+        <h2>IEQ - NE</h2>
+        <a href="/">Painel</a>
+        <a href="/visitantes" class="active">Visitantes</a>
+        <a href="/relatorios">Relatórios</a>
+    </nav>
+
+    <main class="main-content">
+        <div class="form-container">
+            <h1>Novo Visitante</h1>
+            <form method="POST">
+                <label>Nome Completo:</label>
+                <input type="text" name="nome" required>
+
+                <label>WhatsApp:</label>
+                <input type="text" name="whatsapp">
+
+                <label>Endereço/Bairro:</label>
+                <input type="text" name="bairro">
+
+                <button type="submit">Cadastrar Visitante</button>
+            </form>
+        </div>
+    </main>
+</body>
+</html>

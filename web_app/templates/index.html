@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel de Acompanhamento</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <nav class="sidebar">
+        <h2>IEQ - NE</h2>
+        <a href="/" class="active">Painel</a>
+        <a href="/visitantes">Visitantes</a>
+        <a href="/relatorios">Relatórios</a>
+    </nav>
+
+    <main class="main-content">
+<header style="background: var(--primary); color: white; padding: 30px; border-radius: 0 0 var(--radius) var(--radius); margin-bottom: 20px; text-align: center; margin-top: -30px;">
+    <h1>Painel de Acompanhamento</h1>
+</header>
+
+<section class="kpi-container" style="display: flex; justify-content: center; gap: 20px; margin-bottom: 30px; flex-wrap: wrap;">
+    {% set boxes = [('Visitantes (7d)', kpis.total_semana), ('Permissão', kpis.permissao), ('Retorno (+)', kpis.retorno), ('Hoje', kpis.hoje)] %}
+    {% for title, value in boxes %}
+    <div class="bento-card kpi-card-box" style="width: 180px; height: 100px; display: flex; justify-content: space-between; align-items: center; padding: 15px;">
+        <div style="text-align: left;">
+            <h4 style="margin: 0; font-size: 0.8rem; color: var(--text);">{{ title }}</h4>
+            <div class="kpi-value" style="font-size: 1.2rem; font-weight: bold; color: var(--accent);">{{ value }}</div>
+        </div>
+        <img src="{{ url_for('static', filename='img/lapis.png') }}" alt="Ícone" style="width: 24px; height: 24px;">
+    </div>
+    {% endfor %}
+</section>
+
+        <div class="funnel" style="display: flex; gap: 20px;">
+            {% for fase in ['Dia 0', 'Até 48h', 'Dias 3 a 7', 'Dias 8 a 14', 'Dias 15 a 29', 'Dia 30'] %}
+            <div class="stage" style="flex: 1;">
+                <h3>{{ fase }}</h3>
+                {% for v in visitors if v.fase_atual == fase %}
+                    <div class="bento-card">
+                        <h5>{{ v.nome }}</h5>
+                        <a href="{{ url_for('visitor_detail', visitor_id=v.id) }}">Detalhes</a>
+                    </div>
+                {% endfor %}
+            </div>
+            {% endfor %}
+        </div>
+    </main>
+</body>
+</html>

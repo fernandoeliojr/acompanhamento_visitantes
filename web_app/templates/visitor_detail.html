@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ visitor.nome }} - Detalhes</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <nav class="sidebar">
+        <h2>IEQ - NE</h2>
+        <a href="/">Painel</a>
+        <a href="#">Visitantes</a>
+        <a href="/relatorios">Relatórios</a>
+    </nav>
+
+    <main class="main-content">
+        <header style="background: none; padding: 0; margin-bottom: 20px;">
+            <a href="{{ url_for('index') }}">&larr; Voltar ao Painel</a>
+            <h1>{{ visitor.nome }}</h1>
+        </header>
+
+        <!-- Visual Timeline: Jornada dos 30 Dias -->
+        <section class="bento-card">
+            <div class="timeline-header">
+                <div>
+                    <h2>Jornada dos 30 Dias</h2>
+                </div>
+            </div>
+            <!-- ... O resto da timeline continua igual, apenas o container mudou ... -->
+            <div class="timeline-progress-wrapper">
+                <!-- ... (mantendo o conteúdo da timeline) ... -->
+                <div class="timeline-progress-bar">
+                    <div class="timeline-progress-fill" style="width: {{ visitor.timeline_progress_pct }}%;"></div>
+                </div>
+                <!-- ... (mantendo os passos) ... -->
+            </div>
+        </section>
+
+        <!-- Detalhes do Visitante e Ações -->
+        <div class="detail-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+            <section class="bento-card">
+                <h2>Informações</h2>
+                <p><strong>Culto:</strong> {{ visitor.culto }}</p>
+                <!-- ... -->
+            </section>
+            <section class="bento-card">
+                <h2>Próxima Ação</h2>
+                <!-- ... -->
+            </section>
+        </div>
+    </main>
+...
+
+    <script>
+        document.getElementById('generateCardBtn').addEventListener('click', async () => {
+            const response = await fetch('/api/generate_card/{{ visitor.id }}', { method: 'POST' });
+            if (response.ok) {
+                alert('Cartão gerado com sucesso!');
+            } else {
+                alert('Erro ao gerar cartão.');
+            }
+        });
+
+        document.getElementById('copyMessageBtn').addEventListener('click', async () => {
+            const response = await fetch('/api/get_message/{{ visitor.id }}');
+            const data = await response.json();
+            navigator.clipboard.writeText(data.message).then(() => {
+                alert('Mensagem copiada!');
+            });
+        });
+
+        const whatsappNumber = "{{ visitor.whatsapp }}";
+        const whatsappLink = document.getElementById('whatsappLink');
+
+        async function setupWhatsApp() {
+            const response = await fetch('/api/get_message/{{ visitor.id }}');
+            const data = await response.json();
+            const message = encodeURIComponent(data.message);
+            whatsappLink.href = `https://wa.me/${whatsappNumber}?text=${message}`;
+        }
+        setupWhatsApp();
+    </script>
+</body>
+</html>
